@@ -23,6 +23,9 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   bool isLoading = true;
   String? errorMessage;
   late RewardedAdManager _rewardedAdManager;
+  double _arabicFontSize = 24.0;
+  double _indonesianFontSize = 16.0;
+  double _transliterationFontSize = 14.0;
 
   @override
   void initState() {
@@ -82,6 +85,46 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
           ),
         ),
         actions: [
+          // Font size decrease button
+          IconButton(
+            icon: const Text(
+              'A-',
+              style: TextStyle(
+                color: Color(0xFF7B68EE),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                if (_arabicFontSize > 16.0) {
+                  _arabicFontSize -= 2.0;
+                  _indonesianFontSize -= 1.0;
+                  _transliterationFontSize -= 1.0;
+                }
+              });
+            },
+          ),
+          // Font size increase button
+          IconButton(
+            icon: const Text(
+              'A+',
+              style: TextStyle(
+                color: Color(0xFF7B68EE),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                if (_arabicFontSize < 32.0) {
+                  _arabicFontSize += 2.0;
+                  _indonesianFontSize += 1.0;
+                  _transliterationFontSize += 1.0;
+                }
+              });
+            },
+          ),
           IconButton(
             icon: const Icon(
               Icons.search,
@@ -230,10 +273,10 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
 
     return Column(
       children: [
-        // Surah Header Card
+        // Compact Surah Header Card
         Container(
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.all(24),
+          margin: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
@@ -241,67 +284,86 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
               colors: [
                 Color(0xFF7B68EE),
                 Color(0xFF9A82FF),
-                Color(0xFFB794FF),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF7B68EE).withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: const Color(0xFF7B68EE).withOpacity(0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: Column(
+          child: Row(
             children: [
-              // Surah Name
-              Text(
-                surahDetail!.namaLatin,
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+              // Left side - Arabic and Latin names
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      surahDetail!.nama,
+                      style: GoogleFonts.amiri(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      surahDetail!.namaLatin,
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 8),
-              // Meaning
+              // Right side - Details
               Text(
-                surahDetail!.arti,
-                style: GoogleFonts.poppins(
-                  color: Colors.white.withOpacity(0.9),
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Revelation and Verses
-              Text(
-                '${surahDetail!.tempatTurun.toUpperCase()} • ${surahDetail!.jumlahAyat} AYAT',
+                '${surahDetail!.tempatTurun.toUpperCase()}\n${surahDetail!.jumlahAyat} AYAT',
                 style: GoogleFonts.poppins(
                   color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.5,
                 ),
+                textAlign: TextAlign.right,
               ),
-              const SizedBox(height: 20),
-              // Bismillah (only show for surahs other than Al-Fatihah and At-Taubah)
-              if (surahDetail!.nomor != 1 && surahDetail!.nomor != 9)
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Text(
-                    'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-                    style: GoogleFonts.amiri(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
             ],
           ),
         ),
+        
+        // Bismillah (only show for surahs other than Al-Fatihah and At-Taubah)
+        if (surahDetail!.nomor != 1 && surahDetail!.nomor != 9)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Text(
+              'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+              style: GoogleFonts.amiri(
+                color: const Color(0xFF7B68EE),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         
         // Audio Player for Surah
         if (surahDetail!.audio.isNotEmpty)
@@ -334,63 +396,24 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Verse Number and Actions
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF7B68EE),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${verse.nomor}',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                    // Verse Number
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF7B68EE),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${verse.nomor}',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                // TODO: Share verse
-                              },
-                              icon: Icon(
-                                Icons.share,
-                                color: Colors.grey[400],
-                                size: 20,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                // TODO: Play verse audio
-                              },
-                              icon: Icon(
-                                Icons.play_arrow,
-                                color: Colors.grey[400],
-                                size: 20,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                // TODO: Bookmark verse
-                              },
-                              icon: Icon(
-                                Icons.bookmark_border,
-                                color: Colors.grey[400],
-                                size: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                     const SizedBox(height: 20),
                     // Arabic Text
@@ -404,7 +427,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                       child: Text(
                         verse.ar,
                         style: GoogleFonts.amiri(
-                          fontSize: 24,
+                          fontSize: _arabicFontSize,
                           height: 2.0,
                           color: const Color(0xFF2C3E50),
                         ),
@@ -426,7 +449,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                         child: Text(
                           _cleanHtmlTags(verse.tr),
                           style: GoogleFonts.poppins(
-                            fontSize: 14,
+                            fontSize: _transliterationFontSize,
                             height: 1.5,
                             color: Colors.grey[700],
                             fontStyle: FontStyle.italic,
@@ -437,7 +460,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                     Text(
                       verse.idn,
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: _indonesianFontSize,
                         height: 1.6,
                         color: const Color(0xFF2C3E50),
                       ),

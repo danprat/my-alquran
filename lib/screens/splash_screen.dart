@@ -314,7 +314,7 @@ class _SplashScreenState extends State<SplashScreen>
                           child: InkWell(
                             borderRadius: BorderRadius.circular(28),
                             onTap: () {
-                              Navigator.pushReplacementNamed(context, '/home');
+                              Navigator.pushReplacementNamed(context, '/quick_access');
                             },
                             child: Center(
                               child: Text(

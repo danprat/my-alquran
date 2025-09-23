@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/quick_access_screen.dart';
+import 'screens/hadith_screen.dart';
 import 'services/admob_service.dart';
 
 void main() async {
@@ -20,7 +22,7 @@ class QuranApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Al-Qur\'an',
+      title: 'My Al Quran',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         primaryColor: const Color(0xFF7B68EE),
@@ -49,6 +51,8 @@ class QuranApp extends StatelessWidget {
       home: const SplashScreen(),
       routes: {
         '/home': (context) => const HomeScreen(),
+        '/quick_access': (context) => const QuickAccessScreen(),
+        '/hadith': (context) => const HadithScreen(),
       },
       debugShowCheckedModeBanner: false,
     );

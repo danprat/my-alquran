@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/surah.dart';
 import '../widgets/surah_card.dart';
-import '../widgets/last_read_card.dart';
 import '../widgets/ad_widgets.dart';
 import '../widgets/search_dialog.dart';
 import '../services/quran_api_service.dart';
 import '../services/admob_service.dart';
 import 'surah_detail_screen.dart';
+import 'quick_access_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,19 +16,17 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int _selectedIndex = 0;
+class _HomeScreenState extends State<HomeScreen> {
   List<Surah> surahs = [];
   bool isLoading = true;
   String? errorMessage;
   late InterstitialAdManager _interstitialAdManager;
+  
+
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
     _interstitialAdManager = InterstitialAdManager();
     _interstitialAdManager.loadInterstitialAd();
     AdMobService.setContext(context);
@@ -90,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
-    _tabController.dispose();
     _interstitialAdManager.dispose();
     super.dispose();
   }
@@ -123,12 +120,14 @@ class _HomeScreenState extends State<HomeScreen>
         ],
         leading: IconButton(
           icon: const Icon(
-            Icons.menu,
+            Icons.home,
             color: Color(0xFF7B68EE),
           ),
-          onPressed: () {
-            // TODO: Implement menu
-          },
+          onPressed: () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const QuickAccessScreen()),
+            (route) => false,
+          ),
         ),
       ),
       body: Padding(
@@ -136,188 +135,13 @@ class _HomeScreenState extends State<HomeScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Greeting
-            Text(
-              'Asslamualaikum',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Tanvir Ahassan',
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF2C3E50),
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            // Last Read Card
-            const LastReadCard(),
-            const SizedBox(height: 16),
-            
             // Banner Ad
             const BannerAdWidget(),
             const SizedBox(height: 16),
-
-            // Tab Bar
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: TabBar(
-                controller: _tabController,
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: const Color(0xFF7B68EE),
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.grey[600],
-                labelStyle: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-                unselectedLabelStyle: GoogleFonts.poppins(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                ),
-                tabs: const [
-                  Tab(text: 'Surah'),
-                  Tab(text: 'Para'),
-                  Tab(text: 'Halaman'),
-                  Tab(text: 'Juz'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Content
+        
+            // Content - Surah List
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // Surah List
-                  _buildSurahList(),
-                  // Para placeholder
-                  const Center(
-                    child: Text(
-                      'Konten para akan segera hadir...',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ),
-                  // Page placeholder
-                  const Center(
-                    child: Text(
-                      'Konten halaman akan segera hadir...',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ),
-                  // Hijb placeholder
-                  const Center(
-                    child: Text(
-                      'Konten juz akan segera hadir...',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          selectedItemColor: const Color(0xFF7B68EE),
-          unselectedItemColor: Colors.grey[400],
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 0 
-                      ? const Color(0xFF7B68EE).withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.book_outlined),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 1 
-                      ? const Color(0xFF7B68EE).withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.lightbulb_outlined),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 2 
-                      ? const Color(0xFF7B68EE).withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.person_outlined),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 3 
-                      ? const Color(0xFF7B68EE).withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.explore_outlined),
-              ),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _selectedIndex == 4 
-                      ? const Color(0xFF7B68EE).withOpacity(0.1)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.bookmark_border),
-              ),
-              label: '',
+              child: _buildSurahList(),
             ),
           ],
         ),
@@ -453,4 +277,6 @@ class _HomeScreenState extends State<HomeScreen>
       ),
     );
   }
+
+
 }

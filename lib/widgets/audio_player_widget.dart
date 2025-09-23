@@ -18,13 +18,11 @@ class AudioPlayerWidget extends StatefulWidget {
 
 class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   late AudioPlayer _audioPlayer;
-  PlayerState? _playerState;
   Duration? _duration;
   Duration? _position;
   
   bool _isPlaying = false;
   double _volume = 0.5;
-  double _playbackRate = 1.0;
 
   @override
   void initState() {
@@ -34,11 +32,13 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   }
 
   Future<void> _initPlayer() async {
+    // Enable background audio
+    await _audioPlayer.setReleaseMode(ReleaseMode.stop);
+    
     // Set up event listeners
     _audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
         setState(() {
-          _playerState = state;
           _isPlaying = state == PlayerState.playing;
         });
       }
@@ -87,31 +87,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     await _audioPlayer.pause();
   }
 
-  Future<void> _stop() async {
-    await _audioPlayer.stop();
-    setState(() {
-      _position = Duration.zero;
-    });
-  }
-
-  Future<void> _seek(Duration position) async {
-    await _audioPlayer.seek(position);
-  }
-
- void _setVolume(double volume) {
-    setState(() {
-      _volume = volume;
-    });
-    _audioPlayer.setVolume(volume);
-  }
-
-  void _setPlaybackRate(double rate) {
-    setState(() {
-      _playbackRate = rate;
-    });
-    _audioPlayer.setPlaybackRate(rate);
-  }
-
   String _formatDuration(Duration? duration) {
     if (duration == null) return '0:00';
     
@@ -124,174 +99,66 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // Compact audio player that takes minimal space
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: Colors.grey.withOpacity(0.08),
+            blurRadius: 6,
+            offset: const Offset(0, 1),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          // Player title
-          Text(
-            widget.title,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF7B68EE),
+          // Play/Pause button
+          Container(
+            width: 32,
+            height: 32,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF7B68EE),
+            ),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: Icon(
+                _isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+                size: 18,
+              ),
+              onPressed: _isPlaying ? _pause : _play,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(width: 8),
           
-          // Progress bar
-          Row(
-            children: [
-              Text(
-                _formatDuration(_position),
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+          // Title
+          Expanded(
+            child: Text(
+              widget.title,
+              style: GoogleFonts.poppins(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF7B68EE),
               ),
-              Expanded(
-                child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: const Color(0xFF7B68EE),
-                    inactiveTrackColor: Colors.grey[300],
-                    thumbColor: const Color(0xFF7B68EE),
-                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
-                  ),
-                  child: Slider(
-                    min: 0,
-                    max: _duration?.inMilliseconds.toDouble() ?? 1000,
-                    value: _position?.inMilliseconds.toDouble() ?? 0,
-                    onChanged: (value) {
-                      _seek(Duration(milliseconds: value.toInt()));
-                    },
-                  ),
-                ),
-              ),
-              Text(
-                _formatDuration(_duration),
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
           
-          const SizedBox(height: 16),
-          
-          // Player controls
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // Playback rate button
-              PopupMenuButton<double>(
-                icon: Icon(
-                  Icons.speed,
-                  color: Colors.grey[600],
-                ),
-                onSelected: _setPlaybackRate,
-                itemBuilder: (context) => [
-                  const PopupMenuItem(value: 0.5, child: Text('0.5x')),
-                  const PopupMenuItem(value: 0.75, child: Text('0.75x')),
-                  const PopupMenuItem(value: 1.0, child: Text('1.0x')),
-                  const PopupMenuItem(value: 1.25, child: Text('1.25x')),
-                  const PopupMenuItem(value: 1.5, child: Text('1.5x')),
-                  const PopupMenuItem(value: 2.0, child: Text('2.0x')),
-                ],
+          // Progress indicator (simple text)
+          if (_duration != null && _position != null)
+            Text(
+              '${_formatDuration(_position)} / ${_formatDuration(_duration)}',
+              style: GoogleFonts.poppins(
+                fontSize: 10,
+                color: Colors.grey[600],
               ),
-              
-              // Previous button
-              IconButton(
-                icon: Icon(
-                  Icons.skip_previous,
-                  color: Colors.grey[600],
-                  size: 32,
-                ),
-                onPressed: () {
-                  // TODO: Implement previous track functionality
-                },
-              ),
-              
-              // Play/Pause button
-              Container(
-                width: 50,
-                height: 50,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xFF7B68EE),
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                  onPressed: _isPlaying ? _pause : _play,
-                ),
-              ),
-              
-              // Next button
-              IconButton(
-                icon: Icon(
-                  Icons.skip_next,
-                  color: Colors.grey[600],
-                  size: 32,
-                ),
-                onPressed: () {
-                  // TODO: Implement next track functionality
-                },
-              ),
-              
-              // Volume control
-              PopupMenuButton(
-                icon: Icon(
-                  _volume == 0 
-                    ? Icons.volume_off 
-                    : _volume < 0.5 
-                      ? Icons.volume_down 
-                      : Icons.volume_up,
-                  color: Colors.grey[600],
-                ),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    enabled: false,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Volume',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Slider(
-                          min: 0.0,
-                          max: 1.0,
-                          value: _volume,
-                          onChanged: (value) {
-                            _setVolume(value);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
         ],
       ),
     );
