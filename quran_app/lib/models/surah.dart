@@ -48,6 +48,7 @@ class Verse {
   final String ar;
   final String tr;
   final String idn;
+  final String? audioUrl;
 
   Verse({
     required this.id,
@@ -56,6 +57,7 @@ class Verse {
     required this.ar,
     required this.tr,
     required this.idn,
+    this.audioUrl,
   });
 
   factory Verse.fromApiJson(Map<String, dynamic> json) {
@@ -66,6 +68,7 @@ class Verse {
       ar: json['ar'] ?? '',
       tr: json['tr'] ?? '',
       idn: json['idn'] ?? '',
+      audioUrl: json['audio'] as String?,
     );
   }
 

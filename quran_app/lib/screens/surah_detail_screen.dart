@@ -23,6 +23,35 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   bool isLoading = true;
   String? errorMessage;
   late RewardedAdManager _rewardedAdManager;
+  bool _isPlayerVisible = false;
+  String? _currentAudioUrl;
+  String? _currentTitle;
+  
+  void _showSearchDialog() {
+    // TODO: Implement search functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Fitur pencarian dalam surah akan segera hadir'),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
+
+  void _showPlayer(String audioUrl, String title) {
+    setState(() {
+      _currentAudioUrl = audioUrl;
+      _currentTitle = title;
+      _isPlayerVisible = true;
+    });
+  }
+
+  void _hidePlayer() {
+    setState(() {
+      _isPlayerVisible = false;
+      _currentAudioUrl = null;
+      _currentTitle = null;
+    });
+  }
 
   @override
   void initState() {
@@ -59,7 +88,7 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
     }
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -88,16 +117,51 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
               color: Color(0xFF7B68EE),
             ),
             onPressed: () {
-              // TODO: Implement search in surah
+              _showSearchDialog();
             },
           ),
         ],
       ),
-      body: isLoading
-          ? _buildLoadingWidget()
-          : errorMessage != null
-              ? _buildErrorWidget()
-              : _buildContent(),
+      body: Stack(
+        children: [
+          // Main content
+          isLoading
+              ? _buildLoadingWidget()
+              : errorMessage != null
+                  ? _buildErrorWidget()
+                  : surahDetail != null
+                      ? _buildContent()
+                      : const Center(child: Text('Data tidak tersedia')),
+          // Floating Audio Player Overlay
+          Offstage(
+            offstage: !_isPlayerVisible || _currentAudioUrl == null || _currentTitle == null,
+            child: Stack(
+              children: [
+                // Background overlay to capture taps outside the player
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: _hidePlayer,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+                // Audio player positioned at the bottom
+                if (_currentAudioUrl != null && _currentTitle != null)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 80, // Positioned above the ad banner
+                    child: AudioPlayerWidget(
+                      audioUrl: _currentAudioUrl!,
+                      title: _currentTitle!,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: _rewardedAdManager.isAdReady
           ? FloatingActionButton.extended(
               onPressed: () {
@@ -226,14 +290,22 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   }
 
   Widget _buildContent() {
-    if (surahDetail == null) return const SizedBox();
+    final detail = surahDetail;
+    if (detail == null) {
+      return const Center(
+        child: Text(
+          'Data surah tidak tersedia',
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+      );
+    }
 
     return Column(
       children: [
-        // Surah Header Card
+        // Surah Header Card (Smaller)
         Container(
-          margin: const EdgeInsets.all(20),
-          padding: const EdgeInsets.all(24),
+          margin: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
@@ -244,12 +316,12 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                 Color(0xFFB794FF),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFF7B68EE).withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -257,66 +329,99 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
             children: [
               // Surah Name
               Text(
-                surahDetail!.namaLatin,
+                detail.namaLatin,
                 style: GoogleFonts.poppins(
                   color: Colors.white,
-                  fontSize: 28,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               // Meaning
               Text(
-                surahDetail!.arti,
+                detail.arti,
                 style: GoogleFonts.poppins(
                   color: Colors.white.withOpacity(0.9),
-                  fontSize: 16,
+                  fontSize: 12,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
               // Revelation and Verses
               Text(
-                '${surahDetail!.tempatTurun.toUpperCase()} • ${surahDetail!.jumlahAyat} AYAT',
+                '${detail.tempatTurun.toUpperCase()} • ${detail.jumlahAyat} AYAT',
                 style: GoogleFonts.poppins(
                   color: Colors.white.withOpacity(0.8),
-                  fontSize: 14,
+                  fontSize: 10,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               // Bismillah (only show for surahs other than Al-Fatihah and At-Taubah)
-              if (surahDetail!.nomor != 1 && surahDetail!.nomor != 9)
+              if (detail.nomor != 1 && detail.nomor != 9)
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Text(
                     'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
                     style: GoogleFonts.amiri(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
                 ),
+              const SizedBox(height: 12),
+              // Audio Player Button
+              ElevatedButton.icon(
+                onPressed: () {
+                  if (detail.audio.isNotEmpty) {
+                    _showPlayer(
+                      detail.audio,
+                      'Audio Surah ${detail.namaLatin}',
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Audio surah tidak tersedia'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.play_arrow, color: Colors.white, size: 18),
+                label: Text(
+                  'Putar Audio Surah',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white.withOpacity(0.2),
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
         
-        // Audio Player for Surah
-        if (surahDetail!.audio.isNotEmpty)
-          AudioPlayerWidget(
-            audioUrl: surahDetail!.audio,
-            title: 'Audio Surah ${surahDetail!.namaLatin}',
-          ),
 
         // Verses List
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: surahDetail!.ayat.length,
+            itemCount: detail.ayat.length,
             itemBuilder: (context, index) {
-              final verse = surahDetail!.ayat[index];
+              if (index >= detail.ayat.length) {
+                return const SizedBox();
+              }
+              final verse = detail.ayat[index];
               return Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 padding: const EdgeInsets.all(20),
@@ -370,7 +475,20 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
                             ),
                             IconButton(
                               onPressed: () {
-                                // TODO: Play verse audio
+                                // Play verse audio
+                                if (verse.audioUrl != null && verse.audioUrl!.isNotEmpty) {
+                                  _showPlayer(
+                                    verse.audioUrl!,
+                                    'Audio Ayat ${verse.nomor}',
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Audio untuk ayat ini tidak tersedia'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
                               },
                               icon: Icon(
                                 Icons.play_arrow,

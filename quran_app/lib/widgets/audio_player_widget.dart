@@ -125,8 +125,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -141,14 +141,28 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Player title
-          Text(
-            widget.title,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF7B68EE),
-            ),
+          // Player header with title and close button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  widget.title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF7B68EE),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.grey),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           
@@ -219,7 +233,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                 icon: Icon(
                   Icons.skip_previous,
                   color: Colors.grey[600],
-                  size: 32,
+                  size: 28,
                 ),
                 onPressed: () {
                   // TODO: Implement previous track functionality
@@ -228,8 +242,8 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               
               // Play/Pause button
               Container(
-                width: 50,
-                height: 50,
+                width: 45,
+                height: 45,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color(0xFF7B68EE),
@@ -238,7 +252,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                   icon: Icon(
                     _isPlaying ? Icons.pause : Icons.play_arrow,
                     color: Colors.white,
-                    size: 32,
+                    size: 28,
                   ),
                   onPressed: _isPlaying ? _pause : _play,
                 ),
@@ -249,7 +263,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                 icon: Icon(
                   Icons.skip_next,
                   color: Colors.grey[600],
-                  size: 32,
+                  size: 28,
                 ),
                 onPressed: () {
                   // TODO: Implement next track functionality
