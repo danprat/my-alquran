@@ -118,10 +118,24 @@ test/common_test.dart
 firebase-debug.log
 firestore-debug.log
 
-# Git LFS
+# Git LFS - Large files
 *.zip
 *.tar.gz
 *.7z
+*.so
+*.dylib
+*.dll
+*.exe
+*.app
+*.dSYM
+*.framework
+
+# Large binary files
+*.apk
+*.aab
+*.ipa
+*.dmg
+*.pkg
 
 # AdMob
 **/android/app/google-services.json
@@ -129,3 +143,47 @@ firestore-debug.log
 # Local environment
 .env
 .env.local
+
+# Build artifacts and temporary files (prevent large files > 100MB)
+**/build/**/*.so
+**/build/**/*.dylib
+**/build/**/*.dll
+**/build/**/intermediates/
+**/build/**/generated/
+**/build/**/tmp/
+**/build/**/outputs/
+**/build/.gradle/
+**/.gradle/
+**/gradle/wrapper/gradle-wrapper.jar
+
+# Flutter/Dart generated files
+**/.dart_tool/
+**/pubspec.lock
+
+# Large asset files
+**/*.mov
+**/*.mp4
+**/*.avi
+**/*.mkv
+**/*.wav
+**/*.flac
+**/*.aiff
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Archive files
+*.rar
+*.tar
+*.bz2
+*.xz
+
+# Node modules (if any)
+node_modules/
+
+# Temporary folders
+tmp/
+temp/
+cache/
