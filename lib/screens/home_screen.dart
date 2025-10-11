@@ -268,9 +268,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
-              // Show native ad every 10 items
-              if ((index + 1) % 10 == 0 && index < surahs.length - 1)
-                const NativeAdWidget(),
             ],
           );
         },

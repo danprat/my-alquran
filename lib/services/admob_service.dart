@@ -2,11 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdMobService {
-  // Demo Ad Unit IDs
-  static const String _bannerAdUnitId = 'ca-app-pub-3940256099942544/9214589741';
-  static const String _interstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
-  static const String _rewardedAdUnitId = 'ca-app-pub-3940256099942544/5224354917';
-  static const String _nativeAdUnitId = 'ca-app-pub-3940256099942544/2247696110';
+  // Production Ad Unit IDs - Cahaya Ilahi
+  static const String _bannerAdUnitId = 'ca-app-pub-2723286941548361/6903036145';
+  static const String _interstitialAdUnitId = 'ca-app-pub-2723286941548361/9290306586';
 
   // Banner Ad
   static String get bannerAdUnitId {
@@ -16,16 +14,6 @@ class AdMobService {
   // Interstitial Ad
   static String get interstitialAdUnitId {
     return _interstitialAdUnitId;
-  }
-
-  // Rewarded Ad
-  static String get rewardedAdUnitId {
-    return _rewardedAdUnitId;
-  }
-
-  // Native Advanced Ad
-  static String get nativeAdUnitId {
-    return _nativeAdUnitId;
   }
 
   // Initialize AdMob
@@ -137,65 +125,6 @@ class InterstitialAdManager {
 
   void dispose() {
     _interstitialAd?.dispose();
-  }
-
-  bool get isAdReady => _isAdReady;
-}
-
-class RewardedAdManager {
-  RewardedAd? _rewardedAd;
-  bool _isAdReady = false;
-
-  void loadRewardedAd() {
-    RewardedAd.load(
-      adUnitId: AdMobService.rewardedAdUnitId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          print('Rewarded ad loaded.');
-          _rewardedAd = ad;
-          _isAdReady = true;
-          _setFullScreenContentCallback();
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          print('Rewarded ad failed to load: $error');
-          _isAdReady = false;
-        },
-      ),
-    );
-  }
-
-  void _setFullScreenContentCallback() {
-    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('Rewarded ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (RewardedAd ad) {
-        print('Rewarded ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _isAdReady = false;
-        loadRewardedAd();
-      },
-      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-        print('Rewarded ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _isAdReady = false;
-        loadRewardedAd();
-      },
-    );
-  }
-
-  void showRewardedAd({required Function(AdWithoutView, RewardItem) onUserEarnedReward}) {
-    if (_isAdReady && _rewardedAd != null) {
-      _rewardedAd!.show(
-        onUserEarnedReward: onUserEarnedReward,
-      );
-    } else {
-      print('Rewarded ad not ready yet.');
-    }
-  }
-
-  void dispose() {
-    _rewardedAd?.dispose();
   }
 
   bool get isAdReady => _isAdReady;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/surah.dart';
 import '../services/quran_api_service.dart';
-import '../services/admob_service.dart';
 import '../widgets/ad_widgets.dart';
 import '../widgets/audio_player_widget.dart';
 
@@ -22,7 +21,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   SurahDetail? surahDetail;
   bool isLoading = true;
   String? errorMessage;
-  late RewardedAdManager _rewardedAdManager;
   double _arabicFontSize = 24.0;
   double _indonesianFontSize = 16.0;
   double _transliterationFontSize = 14.0;
@@ -30,14 +28,11 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _rewardedAdManager = RewardedAdManager();
-    _rewardedAdManager.loadRewardedAd();
     _loadSurahDetail();
   }
 
   @override
   void dispose() {
-    _rewardedAdManager.dispose();
     super.dispose();
   }
 
@@ -141,41 +136,6 @@ class _SurahDetailScreenState extends State<SurahDetailScreen> {
           : errorMessage != null
               ? _buildErrorWidget()
               : _buildContent(),
-      floatingActionButton: _rewardedAdManager.isAdReady
-          ? FloatingActionButton.extended(
-              onPressed: () {
-                _rewardedAdManager.showRewardedAd(
-                  onUserEarnedReward: (ad, reward) {
-                    print('User earned reward: ${reward.amount} ${reward.type}');
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Terima kasih! Anda mendapat ${reward.amount} ${reward.type}',
-                          style: GoogleFonts.poppins(color: Colors.white),
-                        ),
-                        backgroundColor: const Color(0xFF7B68EE),
-                      ),
-                    );
-                  },
-                );
-              },
-              backgroundColor: const Color(0xFF7B68EE),
-              label: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.play_circle_filled, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Reward',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : null,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,

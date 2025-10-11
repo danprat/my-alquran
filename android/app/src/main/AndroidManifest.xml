@@ -32,9 +32,9 @@
             android:name="flutterEmbedding"
             android:value="2" />
         
-        <!-- AdMob App ID (Demo) -->
+        <!-- AdMob App ID - Cahaya Ilahi -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-2723286941548361~6686030833"/>
     </application>
 </manifest>
