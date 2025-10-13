@@ -1,4 +1,4 @@
-# AdMob Integration Guide
+# AdMob Integration Guide - Muslim Flutter
 
 ## Overview
 Aplikasi Quran telah diintegrasikan dengan Google AdMob menggunakan ID demo untuk testing. Berikut adalah jenis iklan yang telah diimplementasikan:

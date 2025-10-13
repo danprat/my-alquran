@@ -34,7 +34,10 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.getByName('debug')
+            // Play App Signing will handle the signing
+            // Disable minify for now to avoid R8 issues
+            minifyEnabled false
+            shrinkResources false
         }
     }
 }

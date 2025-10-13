@@ -1,4 +1,4 @@
-# 📱 AdMob Production Configuration - Cahaya Ilahi
+# 📱 AdMob Production Configuration - Muslim Flutter
 
 ## ✅ Updated AdMob IDs
 

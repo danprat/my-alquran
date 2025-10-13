@@ -1,4 +1,4 @@
-# 🎉 BUILD SUMMARY - Cahaya Ilahi
+# 🎉 BUILD SUMMARY - Muslim Flutter
 
 ## ✅ Build Complete!
 
@@ -15,7 +15,7 @@
 ## 📱 App Information
 
 ### Basic Details
-- **App Name**: Cahaya Ilahi (My Al-Quran)
+- **App Name**: Muslim Flutter (My Al-Quran)
 - **Package**: com.example.quran_app
 - **Min SDK**: 21 (Android 5.0)
 - **Target SDK**: 34 (Android 14)
@@ -62,7 +62,7 @@ https://play.google.com/console
 - Choose signing method (Recommended: Play App Signing)
 
 ### 4️⃣ Complete Store Listing
-- App name: Cahaya Ilahi
+- App name: Muslim Flutter
 - Short description (80 chars max)
 - Full description (4000 chars max)
 - Upload graphics assets
