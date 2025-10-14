@@ -1,6 +1,22 @@
-# 🔧 Play Store Debug Mode Issue - FIXED
+# Fix Debug Mode Detection di Play Store
 
-## ❌ Masalah Sebelumnya
+## ⚠️ UPDATE: Sekarang Menggunakan Manual Keystore
+
+**Tanggal Update**: 14 Oktober 2025
+
+Aplikasi sekarang menggunakan **Manual Keystore Signing** untuk kontrol penuh atas signing process.
+
+### 📚 Dokumentasi Lengkap:
+Lihat file: **[MANUAL_KEYSTORE_SETUP.md](MANUAL_KEYSTORE_SETUP.md)**
+
+### 🔑 Password Update Required:
+Lihat file: **[PASSWORD_UPDATE_REQUIRED.md](PASSWORD_UPDATE_REQUIRED.md)**
+
+---
+
+# Masalah Awal: Debug Mode Detection
+
+## 🐛 Problem
 
 Play Store mendeteksi aplikasi sebagai "debug mode" karena:
 ```gradle

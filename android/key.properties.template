@@ -1,0 +1,17 @@
+# Template untuk key.properties
+# Copy file ini ke: android/key.properties
+# Kemudian ganti semua nilai dengan nilai yang sebenarnya
+
+# Password untuk keystore file
+storePassword=GANTI_DENGAN_PASSWORD_KEYSTORE_ANDA
+
+# Password untuk key alias
+keyPassword=GANTI_DENGAN_PASSWORD_KEY_ANDA
+
+# Nama alias key (default: upload)
+keyAlias=upload
+
+# Path ke keystore file
+# Mac/Linux: /Users/username/upload-keystore.jks
+# Windows: C:\\Users\\username\\upload-keystore.jks
+storeFile=/Users/danypratmanto/upload-keystore.jks
