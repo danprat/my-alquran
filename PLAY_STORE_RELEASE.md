@@ -1,172 +1,341 @@
-# 🚀 Google Play Store Release Guide - Muslim Flutter
+# 🚀 Play Store Release Guide - Cahaya Ilahi# 🚀 Google Play Store Release Guide - Muslim Flutter
 
-## ✅ Build Complete
 
-### Build Information
-- **Build Type**: Android App Bundle (AAB)
-- **File Location**: `build/app/outputs/bundle/release/app-release.aab`
-- **File Size**: 46.7MB
+
+## ✅ **STATUS: SIAP UPLOAD!**## ✅ Build Complete
+
+
+
+**Tanggal**: 14 Oktober 2025  ### Build Information
+
+**Build Status**: ✅ Success  - **Build Type**: Android App Bundle (AAB)
+
+**Package Name**: `id.cahayailahi.alquran`  - **File Location**: `build/app/outputs/bundle/release/app-release.aab`
+
+**AAB Size**: 47 MB- **File Size**: 46.7MB
+
 - **Build Date**: October 11, 2025
-- **App Name**: Cahaya Ilahi (My Al-Quran)
+
+---- **App Name**: Cahaya Ilahi (My Al-Quran)
+
 - **Version**: Check `pubspec.yaml` for version number
+
+## 📱 **Informasi Aplikasi**
 
 ## 📦 What is AAB?
 
-Android App Bundle (AAB) adalah format publishing yang direkomendasikan Google. Benefits:
-- ✅ **Dynamic Delivery**: User hanya download resources yang dibutuhkan
-- ✅ **Smaller Download Size**: Play Store optimasi APK per device
-- ✅ **Better Performance**: Lebih efisien dari APK biasa
+- **Nama**: Cahaya Ilahi - My Al-Quran
+
+- **Package**: id.cahayailahi.alquranAndroid App Bundle (AAB) adalah format publishing yang direkomendasikan Google. Benefits:
+
+- **Version**: 1.0.0+1- ✅ **Dynamic Delivery**: User hanya download resources yang dibutuhkan
+
+- **Platform**: Android (Play Store)- ✅ **Smaller Download Size**: Play Store optimasi APK per device
+
+- **AAB**: `build/app/outputs/bundle/release/app-release.aab`- ✅ **Better Performance**: Lebih efisien dari APK biasa
+
 - ✅ **Required for New Apps**: Play Store wajib AAB untuk app baru (sejak 2021)
+
+---
 
 ## 📋 Pre-Upload Checklist
 
-### 1. ✅ Verifikasi Build
-```bash
-# Check file exists
-ls -lh build/app/outputs/bundle/release/app-release.aab
+## ✅ **Checklist Sebelum Upload**
 
-# Expected output: ~46.7MB
-```
+### 1. ✅ Verifikasi Build
+
+### Build & Configuration```bash
+
+- [x] Package name BUKAN com.example.*# Check file exists
+
+- [x] Release mode (bukan debug)ls -lh build/app/outputs/bundle/release/app-release.aab
+
+- [x] Keystore properly configured
+
+- [x] AAB built successfully (47 MB)# Expected output: ~46.7MB
+
+- [x] ProGuard rules configured```
+
+- [x] AdMob production IDs active
 
 ### 2. ✅ App Configuration Check
-- [x] AdMob Production IDs configured
-- [x] App ID: `ca-app-pub-2723286941548361~6686030833`
-- [x] Banner & Interstitial ads active
-- [x] Rewarded & Native ads removed
-- [x] Internet permission enabled
+
+### Security- [x] AdMob Production IDs configured
+
+- [x] Keystore backed up- [x] App ID: `ca-app-pub-2723286941548361~6686030833`
+
+- [x] Password saved securely- [x] Banner & Interstitial ads active
+
+- [x] key.properties NOT in Git- [x] Rewarded & Native ads removed
+
+- [x] Keystore files NOT in Git- [x] Internet permission enabled
+
 - [x] Network state permission enabled
 
-### 3. ✅ Version Information
-Check in `pubspec.yaml`:
-```yaml
-version: 1.0.0+1
+### Documentation
+
+- [x] BUILD_INSTRUCTIONS.md### 3. ✅ Version Information
+
+- [x] MANUAL_KEYSTORE_SETUP.mdCheck in `pubspec.yaml`:
+
+- [x] PACKAGE_NAME_UPDATE.md```yaml
+
+- [x] All changes committed & pushedversion: 1.0.0+1
+
 ```
+
+---
 
 Format: `major.minor.patch+buildNumber`
-- **1.0.0**: Version name (user-facing)
+
+## 📤 **Step-by-Step Upload Guide**- **1.0.0**: Version name (user-facing)
+
 - **+1**: Version code (internal, must increment for each release)
 
-### 4. ⚠️ App Signing
+### 1. Login ke Play Console
+
+URL: https://play.google.com/console### 4. ⚠️ App Signing
+
 **IMPORTANT**: Play Store requires app signing. Dua options:
 
-#### Option A: Play App Signing (Recommended ⭐)
-- Google manages signing key
-- Upload AAB langsung
-- Google akan sign secara otomatis
+### 2. Create New App
+
+- App name: **Cahaya Ilahi - My Al-Quran**#### Option A: Play App Signing (Recommended ⭐)
+
+- Default language: **Indonesian**- Google manages signing key
+
+- App type: **App**- Upload AAB langsung
+
+- Free or paid: **Free**- Google akan sign secara otomatis
+
 - Lebih aman, key management by Google
 
-#### Option B: Manual Signing
+### 3. Upload AAB
+
+Navigation: **Release → Production → Create new release**#### Option B: Manual Signing
+
 - Anda manage signing key sendiri
-- Perlu generate keystore dan sign AAB
-- More control tapi more responsibility
 
-**Untuk first upload, Google akan minta pilih signing method.**
+Upload file:- Perlu generate keystore dan sign AAB
 
-## 🔐 Manual Signing (Optional)
+```- More control tapi more responsibility
 
-Jika ingin manual signing:
+build/app/outputs/bundle/release/app-release.aab
 
-### 1. Generate Keystore
-```bash
-keytool -genkey -v -keystore ~/upload-keystore.jks \
-  -keyalg RSA -keysize 2048 -validity 10000 \
-  -alias upload
+```**Untuk first upload, Google akan minta pilih signing method.**
+
+
+
+### 4. Release Notes (Indonesian)## 🔐 Manual Signing (Optional)
+
+```
+
+🎉 Rilis Pertama v1.0.0Jika ingin manual signing:
+
+
+
+✨ Fitur:### 1. Generate Keystore
+
+• Al-Quran lengkap 30 Juz dengan terjemahan Indonesia```bash
+
+• Audio bacaan untuk setiap surahkeytool -genkey -v -keystore ~/upload-keystore.jks \
+
+• Koleksi Hadits Shahih  -keyalg RSA -keysize 2048 -validity 10000 \
+
+• Quick access & bookmark  -alias upload
+
+• Interface modern dan mudah digunakan
 
 # Jawab pertanyaan:
-# - Nama: Your Name
-# - Organisasi: Your Organization
+
+Jazakumullahu khairan! 🤲# - Nama: Your Name
+
+```# - Organisasi: Your Organization
+
 # - Kota: Your City
-# - Negara: ID
+
+### 5. Store Listing# - Negara: ID
+
 # 
-# SIMPAN PASSWORD dengan AMAN!
-```
 
-### 2. Configure Signing in Android
+**Short Description** (80 chars):# SIMPAN PASSWORD dengan AMAN!
+
+``````
+
+Al-Quran & Hadits lengkap dengan terjemahan dan audio bacaan
+
+```### 2. Configure Signing in Android
+
 Create `android/key.properties`:
-```properties
-storePassword=<password dari keystore>
+
+**Category**: Books & Reference  ```properties
+
+**Tags**: Al-Quran, Islam, Muslim, HadithstorePassword=<password dari keystore>
+
 keyPassword=<password dari key>
-keyAlias=upload
-storeFile=<lokasi ke keystore>/upload-keystore.jks
-```
 
-### 3. Update `android/app/build.gradle`
-```gradle
+### 6. Content RatingkeyAlias=upload
+
+- **Rating**: EveryonestoreFile=<lokasi ke keystore>/upload-keystore.jks
+
+- **Religious content**: Yes (Islamic)```
+
+
+
+### 7. Privacy Policy### 3. Update `android/app/build.gradle`
+
+**REQUIRED!** Buat privacy policy sederhana.```gradle
+
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+
+---def keystorePropertiesFile = rootProject.file('key.properties')
+
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+## 🎨 **Assets Needed**    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 }
 
-android {
-    ...
+### Screenshots (Min 2, Max 8)
+
+- Phone: 1080x1920 atau 1080x2400android {
+
+- Format: PNG/JPG    ...
+
     signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+
+### App Icon        release {
+
+- Size: 512x512px            keyAlias keystoreProperties['keyAlias']
+
+- Format: PNG            keyPassword keystoreProperties['keyPassword']
+
             storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
-        }
-    }
+
+### Feature Graphic (REQUIRED)            storePassword keystoreProperties['storePassword']
+
+- Size: 1024x500px        }
+
+- Format: PNG/JPG    }
+
     buildTypes {
-        release {
+
+---        release {
+
             signingConfig signingConfigs.release
-        }
+
+## 🚀 **After Upload**        }
+
     }
-}
+
+1. **Review**: Google akan review (1-3 hari)}
+
+2. **Monitor**: Check email & Play Console```
+
+3. **Publish**: Jika approved, set release percentage
+
+4. **Share**: Bagikan link Play Store### 4. Rebuild with Signing
+
+```bash
+
+---flutter build appbundle --release
+
 ```
 
-### 4. Rebuild with Signing
-```bash
-flutter build appbundle --release
-```
+## 📊 **Monitoring**
 
 ## 📱 Upload to Play Console
 
-### Step 1: Login to Play Console
-1. Go to https://play.google.com/console
-2. Login dengan Google Account
-3. Create new application (jika belum ada)
+Monitor di Play Console:
 
-### Step 2: App Information
+- Install statistics### Step 1: Login to Play Console
+
+- Crash rate1. Go to https://play.google.com/console
+
+- User reviews & ratings2. Login dengan Google Account
+
+- ANR reports3. Create new application (jika belum ada)
+
+
+
+---### Step 2: App Information
+
 Fill required information:
-- **App Name**: Cahaya Ilahi
+
+## 🔄 **Future Updates**- **App Name**: Cahaya Ilahi
+
 - **Short Description**: Aplikasi Al-Quran digital lengkap dengan terjemahan Indonesia
-- **Full Description**: 
-  ```
-  Cahaya Ilahi adalah aplikasi Al-Quran digital yang lengkap dan mudah digunakan.
-  
+
+Update version di `pubspec.yaml`:- **Full Description**: 
+
+```yaml  ```
+
+version: 1.0.1+2  Cahaya Ilahi adalah aplikasi Al-Quran digital yang lengkap dan mudah digunakan.
+
+```  
+
   ✨ Fitur Utama:
-  • 114 Surah lengkap dengan teks Arab asli
-  • Terjemahan Bahasa Indonesia
-  • Transliterasi Latin
-  • Audio recitation untuk setiap surah
-  • Last read tracking
+
+Rebuild & upload:  • 114 Surah lengkap dengan teks Arab asli
+
+```bash  • Terjemahan Bahasa Indonesia
+
+flutter clean  • Transliterasi Latin
+
+flutter build appbundle --release  • Audio recitation untuk setiap surah
+
+```  • Last read tracking
+
   • Interface yang clean dan modern
-  • Responsive design
+
+---  • Responsive design
+
   • Gratis tanpa batasan
-  
+
+## 📞 **Resources**  
+
   📖 Konten:
-  • Semua surah Al-Quran (114 surah)
-  • Teks Arab dengan font Amiri
-  • Terjemahan lengkap per ayat
+
+- Play Console: https://play.google.com/console  • Semua surah Al-Quran (114 surah)
+
+- Flutter Deployment: https://docs.flutter.dev/deployment/android  • Teks Arab dengan font Amiri
+
+- Play Console Help: https://support.google.com/googleplay/android-developer  • Terjemahan lengkap per ayat
+
   • Informasi tempat turun (Mekah/Madinah)
-  • Jumlah ayat per surah
+
+---  • Jumlah ayat per surah
+
   
-  🎯 Kemudahan:
+
+## 🎉 **Ready!**  🎯 Kemudahan:
+
   • Pull to refresh
-  • Smooth scrolling
+
+Aplikasi **Cahaya Ilahi** siap di-publish ke Play Store!  • Smooth scrolling
+
   • Pencarian surah
-  • Kontrol ukuran font
-  • Bookmark last read
-  
+
+**Package**: `id.cahayailahi.alquran`    • Kontrol ukuran font
+
+**Status**: ✅ Production Ready    • Bookmark last read
+
+**Size**: 47 MB  
+
   Aplikasi ini cocok untuk:
-  - Membaca Al-Quran sehari-hari
+
+Semoga bermanfaat! 🤲  - Membaca Al-Quran sehari-hari
+
   - Belajar dan menghafal
-  - Memahami makna ayat
+
+---  - Memahami makna ayat
+
   - Referensi cepat
-  
-  Semoga aplikasi ini bermanfaat untuk ibadah Anda. Barakallahu fiikum.
+
+**Last Updated**: 14 Oktober 2025    
+
+**Author**: Dany Pratmanto  Semoga aplikasi ini bermanfaat untuk ibadah Anda. Barakallahu fiikum.
+
   ```
 
 ### Step 3: Graphics Assets
