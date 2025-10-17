@@ -5,6 +5,9 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystorePropertiesFile = rootProject.file("upload-keystore.jks")
+def keystoreProperties = new Properties()
+
 android {
     namespace "id.cahayailahi.alquran"
     compileSdk flutter.compileSdkVersion
@@ -32,10 +35,20 @@ android {
         multiDexEnabled true
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../../upload-keystore.jks")
+            storePassword "android"
+            keyAlias "upload"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         release {
-            // Play App Signing will handle the signing automatically
-            // No manual keystore needed - Google manages signing
+            // Upload keystore for Play App Signing
+            // Google will re-sign with their app signing key
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }

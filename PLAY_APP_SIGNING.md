@@ -1,22 +1,40 @@
-# 🔐 Play App Signing - Otomatis Tanpa Keystore Manual
+# 🔐 Play App Signing - Otomatis dengan Upload Key
 
 ## ✅ **KONFIGURASI SELESAI!**
 
 **Tanggal Update**: 17 Oktober 2025  
-**Status**: ✅ Ready for Play Store (Google mengelola signing)
+**Status**: ✅ Ready for Play Store (Signed & Ready)
 
 ---
 
 ## 🎯 **Apa itu Play App Signing?**
 
-**Play App Signing** adalah layanan dari Google yang mengelola dan melindungi app signing key Anda secara otomatis.
+**Play App Signing** adalah layanan dari Google yang mengelola app signing key Anda, sementara Anda hanya perlu **upload key** untuk upload AAB.
+
+### 📦 **Cara Kerja:**
+
+1. **Upload Key** (Anda) → Sign AAB untuk upload
+2. **App Signing Key** (Google) → Sign APK final untuk distribusi
+3. **Users** → Download APK yang di-sign Google
 
 ### ✅ **Keuntungan:**
-- ✅ **Tidak perlu keystore manual** - Google yang handle
+- ✅ **Upload key sederhana** - Password: "android" (mudah diingat)
+- ✅ **Google manage app signing key** - Google yang protect & backup
 - ✅ **Lebih aman** - Google backup dan protect key Anda
 - ✅ **Reset upload key** - Bisa reset jika kehilangan
-- ✅ **Lebih mudah** - Tidak perlu khawatir kehilangan keystore
+- ✅ **Mudah** - Tidak perlu khawatir kehilangan app signing key
 - ✅ **Rekomendasi Google** - Best practice untuk Play Store
+
+### 🔑 **Upload Key Info:**
+```
+File: upload-keystore.jks
+Location: Project root
+Password: android
+Key Alias: upload
+Key Password: android
+```
+
+**Note**: Upload key ini HANYA untuk upload AAB. Google akan re-sign dengan app signing key mereka untuk distribusi.
 
 ### 🆚 **Perbandingan dengan Manual Keystore:**
 
@@ -35,6 +53,9 @@
 ### File: `android/app/build.gradle`
 
 ```groovy
+def keystorePropertiesFile = rootProject.file("upload-keystore.jks")
+def keystoreProperties = new Properties()
+
 android {
     namespace "id.cahayailahi.alquran"
     
@@ -47,10 +68,20 @@ android {
         multiDexEnabled true
     }
 
+    signingConfigs {
+        release {
+            storeFile file("../../upload-keystore.jks")
+            storePassword "android"
+            keyAlias "upload"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         release {
-            // Play App Signing will handle the signing automatically
-            // No manual keystore needed - Google manages signing
+            // Upload keystore for Play App Signing
+            // Google will re-sign with their app signing key
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }
@@ -59,9 +90,9 @@ android {
 ```
 
 **Key Points:**
-- ❌ **TIDAK ADA** `signingConfigs`
-- ❌ **TIDAK PERLU** keystore manual
-- ✅ **Google** yang handle signing otomatis
+- ✅ **Upload keystore** untuk sign AAB saat upload
+- ✅ **Google** akan re-sign dengan app signing key
+- ✅ **Password sederhana**: "android" (easy to remember)
 
 ---
 
